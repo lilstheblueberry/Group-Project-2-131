@@ -1,5 +1,4 @@
 #include "StudyPlanner.h"
-#include <string>
 #include <iostream>
 
 StudyPlanner::StudyPlanner()
@@ -107,39 +106,132 @@ void StudyPlanner::removeHelper(Node*& root, std::string title)
 }
 void StudyPlanner::inorderHelper(Node* root) const
 {
+	if (root == nullptr)
+{
+    return;
+}
+inorderHelper(root->left);
 
+if (root->completed)
+{
+    std::cout << " [✓] ";
+}
+else
+{
+    std::cout << "[ ] ";
+}
+std::cout << root->title
+    << " | Due: "
+    << root->dueDate
+    << std::endl;
+inorderHelper(root->right);
 }
 void StudyPlanner::preorderHelper(Node* root) const
 {
+	if (root == nullptr)
+{
+    return;
+}
 
+if (root->completed)
+{
+    std::cout << " [✓] ";
+}
+else
+{
+    std::cout << "[ ] ";
+}
+
+std::cout << root->title
+    << " | Due: "
+    << root->dueDate
+    << std::endl;
+preorderHelper(root->left);
+
+preorderHelper(root->right);
 }
 void StudyPlanner::postorderHelper(Node* root) const
 {
+	if (root == nullptr)
+{
+    return;
+}
+postorderHelper(root->left);
+
+postorderHelper(root->right);
+
+if (root->completed)
+{
+    std::cout << " [✓] ";
+}
+else
+{
+    std::cout << "[ ] ";
+}
+
+std::cout << root->title
+    << " | Due: "
+    << root->dueDate
+    << std::endl;
 
 }
 void StudyPlanner::destroyTree(Node*& root)
 {
+	if (root == nullptr)
+{
+    return;
+}
 
+destroyTree(root->left);
+
+destroyTree(root->right);
+
+delete root;
+
+root = nullptr;
 }
 void StudyPlanner::printPlannerHelper(Node* root) const
 {
-
+	inorderHelper(root);
 }
 void StudyPlanner::markCompleteHelper(Node* root, std::string title)
 {
+	 if (root == nullptr)
+ {
+     return;
+ }
 
+ if (root->title == title)
+ {
+     root->completed = true;
+     std::cout << "Task marked complete." << std::endl;
+ }
+ else if (title < root->title)
+ {
+     markCompleteHelper(root->left, title);
+ }
+ else
+ {
+     markCompleteHelper(root->right, title);
+ }
 }
 void StudyPlanner::addTask(std::string title, std::string dueDate)
 {
-
+	insertHelper(root,title,dueDate);
 }
 bool StudyPlanner::searchTask(std::string title) const
 {
-
+	return searchHelper(root, title);
 }
 void StudyPlanner::remove(std::string title)
 {
+	if (!searchTask(title))
+{
+    std::cout << "Task not found." << std::endl;
+    return;
+}
 
+removeHelper(root,title);
 }
 void StudyPlanner::displayInorder() const
 {
@@ -156,4 +248,14 @@ void StudyPlanner::displayPostorder() const
 void StudyPlanner::printPlanner() const
 {
 	printPlannerHelper(root);
+}
+void StudyPlanner::markComplete(std::string title)
+{
+    if (!searchTask(title))
+    {
+        std::cout << "Task not found." << std::endl;
+        return;
+    }
+
+    markCompleteHelper(root,title);
 }
